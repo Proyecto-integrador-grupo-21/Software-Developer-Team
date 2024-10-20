@@ -1,0 +1,25 @@
+# Entornos virtuales de Python
+venv/
+ENV/
+env/
+
+# Archivos de bases de datos
+*.sql
+
+# Archivos de cache de Python
+__pycache__/
+*.py[cod]
+
+# Archivos de logs
+*.log
+
+# Archivos de configuración de entorno
+.env
+
+# Carpetas de compilación o temporales
+*.tmp
+*.swp
+
+# Archivos de prueba o salida de Pytest
+.pytest_cache/
+htmlcov/
