@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- Creación de la base de datos
 CREATE DATABASE IF NOT EXISTS ARGBrokerDB;
 USE ARGBrokerDB;
@@ -8,10 +9,18 @@ CREATE TABLE IF NOT EXISTS inversor (
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     cuil VARCHAR(13) NOT NULL UNIQUE,
+=======
+CREATE TABLE inversor (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    cuil VARCHAR(11) NOT NULL UNIQUE,
+>>>>>>> 1cb82355610fd7a5292f242c3ba21e2c76f0db6a
     email VARCHAR(255) NOT NULL UNIQUE,
     contrasena VARCHAR(255) NOT NULL,
     direccion VARCHAR(255) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
+<<<<<<< HEAD
     perfil_inversor ENUM('conservador', 'intermedio', 'agresivo') NOT NULL, 
     cuenta_bloqueada BOOLEAN DEFAULT FALSE,
     saldo_cuenta DECIMAL(12, 2) DEFAULT 0.00 
@@ -73,3 +82,8 @@ INSERT INTO inversor (nombre, apellido, cuil, email, contrasena, direccion, tele
 ('Ana', 'Gómez', '20-98765432-1', 'ana@example.com', 'password456', 'Avenida Siempre Viva 456', '987654321', 'conservador', FALSE, 5000.00);
 
 SELECT * FROM inversor
+=======
+    perfil_inversor ENUM('conservador', 'medio', 'agresivo') NOT NULL, 
+    saldo_cuenta DECIMAL(12, 2) DEFAULT 0.00 
+);
+>>>>>>> 1cb82355610fd7a5292f242c3ba21e2c76f0db6a
