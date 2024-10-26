@@ -1,4 +1,3 @@
-# src/model/transaccion.py
 class Transaccion:
     def __init__(self, id_transaccion=None, id_inversor=None, id_accion=None, tipo_transaccion=None, cantidad=None, precio=None, comision=None, fecha_transaccion=None):
         self.id_transaccion = id_transaccion
