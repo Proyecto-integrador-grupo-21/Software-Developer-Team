@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS ARGBrokerDB;
+
 -- Creación de la base de datos
 CREATE DATABASE IF NOT EXISTS ARGBrokerDB;
 USE ARGBrokerDB;
