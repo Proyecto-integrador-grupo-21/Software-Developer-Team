@@ -1,4 +1,6 @@
 from inversor_dao import InversorDao
+from transaccion import Transaccion
+from accion import Accion
 
 class Inversor:
     def __init__(self, nombre, apellido, cuil, email, contrasena, direccion, telefono, perfil_inversor, saldo_cuenta=0.00):
@@ -54,6 +56,18 @@ class Inversor:
     @property
     def saldo_cuenta(self):
         return self._saldo_cuenta
+    
+    def buscar_id(self):
+        consulta = "SELECT id FROM inversor WHERE cuil = %s"
+        parametros = (self._cuil,)
+        try:
+            resultado = self._dao.consulta_personalizada(consulta, parametros)
+            if resultado:
+                return resultado[0]
+            else:
+                raise ValueError("Inversor no encontrado.")
+        except Exception as e:
+            raise Exception(f"Error al buscar el ID del inversor: {e}")
 
     def registrar(self):
         if self.verificar_inversor():
@@ -102,29 +116,33 @@ class Inversor:
                 print("CUIL o contraseña incorrectos.")
             return False
         
-    def comprar_accion(self, accion: Accion, cantidad: int):
+    def operacion(self, accion, cantidad: int, tipo: str):
+        accion = Accion(accion)
         if cantidad <= 0:
-            raise ValueError("La cantidad a comprar debe ser mayor que cero.")
+            raise ValueError("La cantidad debe ser mayor que cero.")
         
-        total_compra = cantidad * accion.precio_compra
-        if total_compra > self.saldo_cuenta:
-            raise Exception("Saldo insuficiente para realizar la compra.")
-        
-        # Aquí puedes agregar la lógica para registrar la compra en la base de datos
-        self._saldo_cuenta -= total_compra
-        print(f"Compra exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_compra}.")
+        id_inversor = self.buscar_id()
 
-    def vender_accion(self, accion: Accion, cantidad: int):
-        if cantidad <= 0:
-            raise ValueError("La cantidad a vender debe ser mayor que cero.")
-        
-        # Aquí deberías verificar si el inversor tiene suficientes acciones para vender.
-        # Suponiendo que hay una lógica para verificar esto.
-        
-        total_venta = cantidad * accion.precio_venta
-        # Aquí puedes agregar la lógica para registrar la venta en la base de datos
-        self._saldo_cuenta += total_venta
-        print(f"Venta exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_venta}.")
+        if tipo == "Compra":
+            total_operacion = cantidad * accion.precio_compra
+            if total_operacion > self._saldo_cuenta:
+                raise Exception("Saldo insuficiente para realizar la compra.")
+            self._saldo_cuenta -= total_operacion
+            
+            transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id_accion, tipo_transaccion="Compra", cantidad=cantidad, precio=accion.precio_compra)
+            transaccion.crear_transaccion()
+            print(f"Compra exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion}.")
+
+        elif tipo == "Venta":
+            total_operacion = cantidad * accion.precio_venta
+
+            transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id_accion, tipo_transaccion="Venta", cantidad=cantidad, precio=accion.precio_venta)
+            transaccion.crear_transaccion()
+            self._saldo_cuenta += total_operacion
+            print(f"Venta exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion}.")
+        else:
+            raise ValueError("Tipo de operación no válido. Debe ser 'Compra' o 'Venta'.")
+
 
 
     def mostrar_datos_cuenta(self):
@@ -138,4 +156,4 @@ class Inversor:
 
 if __name__ == "__main__":
     test = Inversor("Miguel", "Scaccia", "20-12335178-9", "miguel1@example.com", "hola123", "Direccion", "31211313", "conservador")
-    print(test.registrar())
+    print(test.operacion("AAPL", 3, "Compra"))

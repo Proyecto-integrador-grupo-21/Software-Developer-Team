@@ -1,18 +1,27 @@
 from accion_dao import AccionDao
+
 class Accion:
-    def __init__(self, simbolo, nombre_empresa, ultimo_precio_operado, apertura, minimo_diario, maximo_diario, ultimo_cierre, cantidad_compra_diaria, precio_compra, precio_venta, cantidad_venta_diaria):
+    def __init__(self, simbolo):
         self._simbolo = simbolo
-        self._nombre_empresa = nombre_empresa
-        self._ultimo_precio_operado = ultimo_precio_operado
-        self._apertura = apertura
-        self._minimo_diario = minimo_diario
-        self._maximo_diario = maximo_diario
-        self._ultimo_cierre = ultimo_cierre
-        self._cantidad_compra_diaria = cantidad_compra_diaria
-        self._precio_compra = precio_compra
-        self._precio_venta = precio_venta
-        self._cantidad_venta_diaria = cantidad_venta_diaria
         self._dao = AccionDao()
+        self.cargar_datos()
+
+    def cargar_datos(self):
+        consulta = "SELECT * FROM Acciones WHERE simbolo = %s"
+        parametros = (self._simbolo,)
+        try:
+            registro = self._dao.consulta_personalizada(consulta, parametros)
+            print("Registro devuelto:", registro)
+            if registro:
+                (self._simbolo, self._nombre_empresa, self._ultimo_precio_operado,
+                self._apertura, self._minimo_diario, self._maximo_diario,
+                self._ultimo_cierre, self._cantidad_compra_diaria,
+                self._precio_compra, self._precio_venta, 
+                self._cantidad_venta_diaria) = registro
+            else:
+                raise ValueError("No se encontró la acción con el símbolo proporcionado.")
+        except Exception as e:
+            raise Exception(f"Error al cargar los datos de la acción: {e}")
 
     @property
     def simbolo(self):
@@ -58,24 +67,6 @@ class Accion:
     def cantidad_venta_diaria(self):
         return self._cantidad_venta_diaria
     
-    def obtener_simbolo_y_nombre(self):
-        return self._simbolo, self._nombre_empresa
-
-    def obtener_accion(self, simbolo):
-        consulta = "SELECT * FROM Acciones WHERE simbolo = %s"
-        parametros = (simbolo,)
-        try:
-            registro = self._dao.consulta_personalizada(consulta, parametros)
-            if registro:
-                return registro  
-            else:
-                return None 
-        except Exception as e:
-            raise Exception(f"Error al obtener los datos de la acción: {e}")
-
-    def obtener_todos(self):
-            registros = self._dao.obtener_todos()
-            print(registros)
     def __str__(self):
         return (f"Acción: {self.simbolo} - {self.nombre_empresa}\n"
                 f"Último Precio: {self.ultimo_precio_operado}\n"
@@ -88,5 +79,6 @@ class Accion:
                 f"Precio Venta: {self.precio_venta}\n"
                 f"Cantidad Venta Diaria: {self.cantidad_venta_diaria}")
 
-lett = Accion()
-print(lett.obtener_todos())
+if __name__ == "__main__":
+    accion_aapl = Accion("AAPL")
+    print(accion_aapl)

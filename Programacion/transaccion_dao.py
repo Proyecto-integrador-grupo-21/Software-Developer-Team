@@ -1,4 +1,4 @@
-from config.db import ConectorDB
+from db import ConectorDB
 from interfaz_dao import InterfazDao
 
 class TransaccionDao(InterfazDao):
@@ -31,3 +31,10 @@ class TransaccionDao(InterfazDao):
         consulta = "SELECT * FROM Transacciones WHERE id_transaccion = %s"
         parametros = (id,)
         return self.conector.obtener_datos(consulta, parametros)
+    
+    def obtener_todos(self):
+            consulta = "SELECT * FROM Transacciones"
+            return self.conector.obtener_datos(consulta)
+
+    def consulta_personalizada(self, consulta, parametros=None):
+        return self.conector.obtener_datos(consulta,parametros)
