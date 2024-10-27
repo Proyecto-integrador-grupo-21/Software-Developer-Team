@@ -57,6 +57,21 @@ class Accion:
     @property
     def cantidad_venta_diaria(self):
         return self._cantidad_venta_diaria
+    
+    def obtener_simbolo_y_nombre(self):
+        return self._simbolo, self._nombre_empresa
+
+    def obtener_accion(self, simbolo):
+        consulta = "SELECT * FROM Acciones WHERE simbolo = %s"
+        parametros = (simbolo,)
+        try:
+            registro = self._dao.consulta_personalizada(consulta, parametros)
+            if registro:
+                return registro  
+            else:
+                return None 
+        except Exception as e:
+            raise Exception(f"Error al obtener los datos de la acción: {e}")
 
     def obtener_todos(self):
             registros = self._dao.obtener_todos()

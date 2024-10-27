@@ -1,8 +1,6 @@
-from accion import Accion
 from db import ConectorDB
-from interfaz_dao import InterfazDao
 
-class AccionDao(InterfazDao):
+class AccionDao():
     def __init__(self):
         self.conector = ConectorDB()
 
@@ -40,12 +38,15 @@ class AccionDao(InterfazDao):
     def obtener(self, simbolo):
         consulta = "SELECT * FROM Acciones WHERE simbolo = %s"
         parametros = (simbolo,)
-        resultado = self.conector.obtener_datos(consulta, parametros)
-        
-        if resultado:
-            return Accion(*resultado[0])
-        return None
-    
+        return self.conector.obtener_datos(consulta, parametros)
+
     def obtener_todos(self):
-            consulta = "SELECT * FROM Acciones"
-            return self.conector.obtener_datos(consulta)
+        consulta = "SELECT * FROM Acciones"
+        return self.conector.obtener_datos(consulta)
+
+    def consulta_personalizada(self, consulta, parametros=None):
+        return self.conector.obtener_datos(consulta, parametros)
+    
+if __name__ == "__main__":
+    lel = AccionDao()
+    print(lel.obtener("AAPL"))

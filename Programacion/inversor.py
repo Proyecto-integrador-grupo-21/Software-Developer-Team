@@ -1,4 +1,5 @@
 from inversor_dao import InversorDao
+
 class Inversor:
     def __init__(self, nombre, apellido, cuil, email, contrasena, direccion, telefono, perfil_inversor, saldo_cuenta=0.00):
         self._nombre = nombre
@@ -29,25 +30,66 @@ class Inversor:
     @property
     def email(self):
         return self._email
+    
+    @property
+    def contrasena(self):
+        return self._contrasena
 
+    @property
+    def direccion(self):
+        return self._direccion
+    
+    @property
+    def telefono(self):
+        return self._telefono
+    
+    @property
+    def perfil_inversor(self):
+        return self._perfil_inversor
+    
+    @property
+    def cuenta_bloqueada(self):
+        return self._cuenta_bloqueada
+    
     @property
     def saldo_cuenta(self):
         return self._saldo_cuenta
 
     def registrar(self):
-        pass
+        if self.verificar_inversor():
+            return (f"El inversor con CUIL {self._cuil} ya tiene una cuenta registrada.")
+        else:
+            try:
+                self._dao.crear(self)
+                print("Registro exitoso.")
+            except Exception as e:
+                raise Exception(f"Error al registrar el inversor: {e}")
 
-    def verificar_inversor(self, email):
-        registros = self._dao.obtener_todos()
-        print(registros)
-        pass
+    def verificar_inversor(self):
+        consulta = "SELECT * FROM inversor WHERE cuil = %s AND email = %s"
+        parametros = (self._cuil, self._email)
+        try:
+            registro = self._dao.consulta_personalizada(consulta, parametros)
+            print(f"Resultado de verificación: {registro}")
+            return bool(registro)
+        except Exception as e:
+            raise Exception(f"Error en la verificación del inversor: {e}")  
 
-    def iniciar_sesion(self, contrasena):
+    def verificar_contrasena(self, cuil, contrasena):
+        consulta = "SELECT cuil FROM inversor WHERE cuil = %s AND contrasena = %s"
+        parametros = (cuil, contrasena)
+        try:
+            registro = self._dao.consulta_personalizada(consulta, parametros)
+            return bool(registro)
+        except Exception as e:
+            raise Exception(f"Error al verificar la contraseña: {e}")
+
+    def iniciar_sesion(self, cuil, contrasena):
         if self._cuenta_bloqueada:
             print("La cuenta está bloqueada.")
             return False
         
-        if self._contrasena == contrasena:
+        if self.verificar_contrasena(cuil, contrasena):
             self._intentos_fallidos = 0
             print("Inicio de sesión exitoso.")
             return True
@@ -57,7 +99,7 @@ class Inversor:
                 self._cuenta_bloqueada = True
                 print("Cuenta bloqueada por demasiados intentos fallidos.")
             else:
-                print("Contraseña incorrecta.")
+                print("CUIL o contraseña incorrectos.")
             return False
 
     def mostrar_datos_cuenta(self):
@@ -68,7 +110,7 @@ class Inversor:
             'saldo_cuenta': self.saldo_cuenta,
             'perfil_inversor': self._perfil_inversor
         }
-    
-lss = Inversor("Miguel", "ssss","20-20202022-1", "dasdsad", "hola123","dadad", "31211313", "conservador")
 
-print(lss.verificar_inversor("lss"))
+if __name__ == "__main__":
+    test = Inversor("Miguel", "Scaccia", "20-12335178-9", "miguel1@example.com", "hola123", "Direccion", "31211313", "conservador")
+    print(test.registrar())

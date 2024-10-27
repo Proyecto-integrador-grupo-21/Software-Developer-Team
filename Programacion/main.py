@@ -1,116 +1,120 @@
-from dao.inversor import Inversor
-# from src.model.accion import Accion
-# from src.model.transaccion import Transaccion
-# from src.model.portafolio import Portafolio
+from inversor import Inversor
+import re
 
-# El resto del código permanece igual
+def mostrar_bienvenida():
+    print("\nBienvenido al Broker")
+    print("1. Iniciar Sesión")
+    print("2. Registrarse")
+    print("3. Salir")
 
+def validar_cuil(cuil):
+    patron = r'^\d{2}-\d{8}-\d$'
+    return re.match(patron, cuil) is not None
 
-# Crear instancias de los DAOs
-# inversor_dao = InversorDao()
-# accion_dao = AccionDao()
-# transaccion_dao = TransaccionDao()
-# portafolio_dao = PortafolioDao()
+def iniciar_sesion():
+    print("\nIniciar Sesión")
+    cuil = input("Ingrese su CUIL (formato XX-XXXXXXXX-X): ")
+    
+    if not validar_cuil(cuil):
+        print("Formato de CUIL inválido. Debe ser XX-XXXXXXXX-X.")
+        return
+    
+    contrasena = input("Ingrese su contraseña: ")
+    inversor = Inversor(nombre="", apellido="", cuil=cuil, email="", contrasena=contrasena, direccion="", telefono="", perfil_inversor="")
+    
+    try:
+        if inversor.iniciar_sesion(cuil, contrasena):
+            print("\nInicio de sesión exitoso. Bienvenido.")
+            mostrar_menu_principal()
+        else:
+            print("CUIL o contraseña incorrectos. Intente nuevamente.")
+    except Exception as e:
+        print(f"Error al iniciar sesión: {e}")
 
-def mostrar_menu():
-    print("\nMenú Principal")
-    print("1. Gestión de Inversores")
-    print("2. Gestión de Acciones")
-    print("3. Gestión de Transacciones")
-    print("4. Gestión de Portafolio")
-    print("5. Salir")
-
-def menu_inversor():
-    print("\nGestión de Inversores")
-    print("1. Agregar inversor")
-    print("2. Modificar inversor")
-    print("3. Eliminar inversor")
-    print("4. Consultar inversor")
-    print("5. Volver al menú principal")
-
-def menu_accion():
-    print("\nGestión de Acciones")
-    print("1. Agregar acción")
-    print("2. Modificar acción")
-    print("3. Eliminar acción")
-    print("4. Consultar acción")
-    print("5. Volver al menú principal")
-
-def menu_transaccion():
-    print("\nGestión de Transacciones")
-    print("1. Registrar transacción")
-    print("2. Consultar transacción")
-    print("3. Volver al menú principal")
-
-def menu_portafolio():
-    print("\nGestión de Portafolio")
-    print("1. Agregar al portafolio")
-    print("2. Consultar portafolio")
-    print("3. Volver al menú principal")
-
-def agregar_inversor():
+def registrar_usuario():
+    print("\nRegistro de Nuevo Usuario")
     nombre = input("Nombre: ")
     apellido = input("Apellido: ")
-    cuil = input("CUIL: ")
+    
+    cuil = input("CUIL (formato XX-XXXXXXXX-X): ")
+    if not validar_cuil(cuil):
+        print("Formato de CUIL inválido. Debe ser XX-XXXXXXXX-X.")
+        return
+
     email = input("Email: ")
     contrasena = input("Contraseña: ")
     direccion = input("Dirección: ")
     telefono = input("Teléfono: ")
     perfil = input("Perfil Inversor (conservador/intermedio/agresivo): ")
-    cuenta_bloqueada = input("Cuenta bloqueada (True/False): ") == "True"
-    saldo_cuenta = float(input("Saldo de cuenta inicial: "))
+    saldo_cuenta = 1000000
 
-    inversor = Inversor(
+    nuevo_inversor = Inversor(
         nombre=nombre, apellido=apellido, cuil=cuil, email=email,
         contrasena=contrasena, direccion=direccion, telefono=telefono,
-        perfil_inversor=perfil, cuenta_bloqueada=cuenta_bloqueada, saldo_cuenta=saldo_cuenta
+        perfil_inversor=perfil, saldo_cuenta=saldo_cuenta
     )
-    # inversor_dao.crear(inversor)
-    print("Inversor agregado exitosamente.")
+    
+    try:
+        if not nuevo_inversor.verificar_inversor():
+            nuevo_inversor.registrar()
+            print("Registro exitoso. Ya puede iniciar sesión.")
+        else:
+            print("Ya existe un inversor con este CUIL. Intente iniciar sesión.")
+    except Exception as e:
+        print(f"Error al registrar usuario: {e}")
 
-# Similar a agregar_inversor, agrega funciones para `modificar`, `eliminar` y `consultar`
+def mostrar_menu_principal():
+    while True:
+        print("\nMenú Principal")
+        print("1. Gestión de Acciones")
+        print("2. Registro de Transacciones")
+        print("3. Portafolio")
+        print("4. Cerrar Sesión")
 
-# Menú de operaciones
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            menu_accion()
+        elif opcion == "2":
+            menu_transaccion()
+        elif opcion == "3":
+            menu_portafolio()
+        elif opcion == "4":
+            print("Sesión cerrada. Regresando al menú de bienvenida.")
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
+def menu_accion():
+    print("\nGestión de Acciones")
+    print("1. Ver todas las acciónes")
+    print("2. Comprar acción")
+    print("3. Vender acción")
+    print("4. Volver al menú principal")
+
+def menu_transaccion():
+    print("\Registro de Transacciones")
+    print("1. Consultar transacciónes")
+    print("2. Volver al menú principal")
+
+def menu_portafolio():
+    print("\nPortafolio")
+    print("1. Consultar portafolio")
+    print("2. Volver al menú principal")
+
+# Inicio de la aplicación
 def ejecutar():
     while True:
-        mostrar_menu()
+        mostrar_bienvenida()
         opcion = input("Seleccione una opción: ")
-        
+
         if opcion == "1":
-            menu_inversor()
-            opcion_inversor = input("Seleccione una opción de inversores: ")
-            if opcion_inversor == "1":
-                agregar_inversor()
-            # Agregar llamadas para modificar, eliminar y consultar inversores
-            
+            iniciar_sesion()
         elif opcion == "2":
-            menu_accion()
-            opcion_accion = input("Seleccione una opción de acciones: ")
-            if opcion_accion == "1":
-                # Llamar a función para agregar acción
-                pass
-            # Agregar llamadas para modificar, eliminar y consultar acciones
-        
+            registrar_usuario()
         elif opcion == "3":
-            menu_transaccion()
-            opcion_transaccion = input("Seleccione una opción de transacciones: ")
-            if opcion_transaccion == "1":
-                # Llamar a función para registrar transacción
-                pass
-            # Agregar llamada para consultar transacciones
-            
-        elif opcion == "4":
-            menu_portafolio()
-            opcion_portafolio = input("Seleccione una opción de portafolio: ")
-            if opcion_portafolio == "1":
-                # Llamar a función para agregar al portafolio
-                pass
-            # Agregar llamada para consultar portafolio
-            
-        elif opcion == "5":
-            print("Saliendo del programa.")
+            print("Gracias por utilizar el Broker. Hasta luego.")
             break
-        
         else:
             print("Opción no válida. Intente nuevamente.")
 

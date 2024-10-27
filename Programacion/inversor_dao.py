@@ -34,6 +34,10 @@ class InversorDao():
     def obtener_todos(self):
             consulta = "SELECT * FROM inversor"
             return self.conector.obtener_datos(consulta)
+    
+    def consulta_personalizada(self, consulta, parametros=None):
+        return self.conector.obtener_datos(consulta,parametros)
+         
 if __name__ == "__main__":
     lel = InversorDao()
 
