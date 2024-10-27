@@ -1,3 +1,4 @@
+from inversor_dao import InversorDao
 class Inversor:
     def __init__(self, nombre, apellido, cuil, email, contrasena, direccion, telefono, perfil_inversor, saldo_cuenta=0.00):
         self._nombre = nombre
@@ -11,6 +12,7 @@ class Inversor:
         self._cuenta_bloqueada = False
         self._saldo_cuenta = saldo_cuenta
         self._intentos_fallidos = 0 
+        self._dao = InversorDao()
 
     @property
     def nombre(self):
@@ -34,6 +36,11 @@ class Inversor:
         return self._saldo_cuenta
 
     def registrar(self):
+        pass
+
+    def verificar_inversor(self, email):
+        registros = self._dao.obtener_todos()
+        print(registros)
         pass
 
     def iniciar_sesion(self, contrasena):
@@ -62,3 +69,7 @@ class Inversor:
             'saldo_cuenta': self.saldo_cuenta,
             'perfil_inversor': self._perfil_inversor
         }
+    
+lss = Inversor("Miguel", "ssss","20-20202022-1", "dasdsad", "hola123","dadad", "31211313", "conservador")
+
+print(lss.verificar_inversor("lss"))

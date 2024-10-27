@@ -1,3 +1,4 @@
+from accion_dao import AccionDao
 class Accion:
     def __init__(self, simbolo, nombre_empresa, ultimo_precio_operado, apertura, minimo_diario, maximo_diario, ultimo_cierre, cantidad_compra_diaria, precio_compra, precio_venta, cantidad_venta_diaria):
         self._simbolo = simbolo
@@ -11,6 +12,7 @@ class Accion:
         self._precio_compra = precio_compra
         self._precio_venta = precio_venta
         self._cantidad_venta_diaria = cantidad_venta_diaria
+        self._dao = AccionDao()
 
     @property
     def simbolo(self):
@@ -56,6 +58,9 @@ class Accion:
     def cantidad_venta_diaria(self):
         return self._cantidad_venta_diaria
 
+    def obtener_todos(self):
+            registros = self._dao.obtener_todos()
+            print(registros)
     def __str__(self):
         return (f"Acción: {self.simbolo} - {self.nombre_empresa}\n"
                 f"Último Precio: {self.ultimo_precio_operado}\n"
@@ -68,3 +73,5 @@ class Accion:
                 f"Precio Venta: {self.precio_venta}\n"
                 f"Cantidad Venta Diaria: {self.cantidad_venta_diaria}")
 
+lett = Accion()
+print(lett.obtener_todos())
