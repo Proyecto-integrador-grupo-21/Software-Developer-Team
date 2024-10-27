@@ -1,4 +1,6 @@
 from inversor import Inversor
+from transaccion import Transaccion
+from accion import Accion
 import re
 
 def mostrar_bienvenida():
@@ -25,7 +27,7 @@ def iniciar_sesion():
     try:
         if inversor.iniciar_sesion(cuil, contrasena):
             print("\nInicio de sesión exitoso. Bienvenido.")
-            mostrar_menu_principal()
+            mostrar_menu_principal(inversor)  # Pasar el inversor para usarlo en las opciones
         else:
             print("CUIL o contraseña incorrectos. Intente nuevamente.")
     except Exception as e:
@@ -63,7 +65,7 @@ def registrar_usuario():
     except Exception as e:
         print(f"Error al registrar usuario: {e}")
 
-def mostrar_menu_principal():
+def mostrar_menu_principal(inversor):
     while True:
         print("\nMenú Principal")
         print("1. Gestión de Acciones")
@@ -74,33 +76,91 @@ def mostrar_menu_principal():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            menu_accion()
+            menu_accion(inversor)  # Pasar inversor
         elif opcion == "2":
-            menu_transaccion()
+            menu_transaccion(inversor)  # Pasar inversor
         elif opcion == "3":
-            menu_portafolio()
+            menu_portafolio(inversor)  # Pasar inversor
         elif opcion == "4":
             print("Sesión cerrada. Regresando al menú de bienvenida.")
             break
         else:
             print("Opción no válida. Intente nuevamente.")
 
-def menu_accion():
-    print("\nGestión de Acciones")
-    print("1. Ver todas las acciónes")
-    print("2. Comprar acción")
-    print("3. Vender acción")
-    print("4. Volver al menú principal")
+def menu_accion(inversor):
+    while True:
+        print("\nGestión de Acciones")
+        print("1. Ver todas las acciones")
+        print("2. Comprar acción")
+        print("3. Vender acción")
+        print("4. Volver al menú principal")
 
-def menu_transaccion():
-    print("\Registro de Transacciones")
-    print("1. Consultar transacciónes")
-    print("2. Volver al menú principal")
+        opcion = input("Seleccione una opción: ")
+        
+        if opcion == "1":
+            # Lógica para ver todas las acciones
+            acciones = Accion.obtener_todas_las_acciones()  # Asegúrate de que esta función exista
+            for accion in acciones:
+                print(f"Símbolo: {accion.simbolo}, Empresa: {accion.nombre_empresa}, Último Precio: {accion.ultimo_precio_operado}")
+        elif opcion == "2":
+            simbolo = input("Ingrese el símbolo de la acción a comprar: ")
+            cantidad = int(input("Ingrese la cantidad a comprar: "))
+            try:
+                transaccion = Transaccion(id_inversor=inversor.id, id_accion=simbolo, tipo_transaccion='compra', cantidad=cantidad, precio=0.0, comision=0.0)
+                transaccion.comprar()  # Implementa esta lógica en la clase Transaccion
+                print("Compra realizada exitosamente.")
+            except Exception as e:
+                print(f"Error en la compra: {e}")
+        elif opcion == "3":
+            simbolo = input("Ingrese el símbolo de la acción a vender: ")
+            cantidad = int(input("Ingrese la cantidad a vender: "))
+            try:
+                transaccion = Transaccion(id_inversor=inversor.id, id_accion=simbolo, tipo_transaccion='venta', cantidad=cantidad, precio=0.0, comision=0.0)
+                transaccion.vender()  # Implementa esta lógica en la clase Transaccion
+                print("Venta realizada exitosamente.")
+            except Exception as e:
+                print(f"Error en la venta: {e}")
+        elif opcion == "4":
+            mostrar_menu_principal(inversor)
+            break
+        else:
+            print("Opción no válida.")
 
-def menu_portafolio():
-    print("\nPortafolio")
-    print("1. Consultar portafolio")
-    print("2. Volver al menú principal")
+def menu_transaccion(inversor):
+    while True:
+        print("\nRegistro de Transacciones")
+        print("1. Consultar transacciones")
+        print("2. Volver al menú principal")
+        
+        opcion = input("Seleccione una opción: ")
+        
+        if opcion == "1":
+            transacciones = Transaccion.obtener_transacciones_por_inversor(inversor.id)  # Implementa esta función
+            for transaccion in transacciones:
+                print(f"ID: {transaccion.id_transaccion}, Tipo: {transaccion.tipo_transaccion}, Cantidad: {transaccion.cantidad}, Precio: {transaccion.precio}")
+        elif opcion == "2":
+            mostrar_menu_principal(inversor)
+            break
+        else:
+            print("Opción no válida.")
+
+def menu_portafolio(inversor):
+    while True:
+        print("\nPortafolio")
+        print("1. Consultar portafolio")
+        print("2. Volver al menú principal")
+        
+        opcion = input("Seleccione una opción: ")
+        
+        if opcion == "1":
+            portafolio = inversor.consultar_portafolio()  # Implementa esta función en la clase Inversor
+            for accion in portafolio:
+                print(f"Símbolo: {accion.simbolo}, Cantidad: {accion.cantidad_acciones}, Valor Invertido: {accion.valor_invertido}")
+        elif opcion == "2":
+            mostrar_menu_principal(inversor)
+            break
+        else:
+            print("Opción no válida.")
 
 # Inicio de la aplicación
 def ejecutar():

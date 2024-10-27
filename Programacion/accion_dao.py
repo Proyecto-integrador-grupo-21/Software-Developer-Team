@@ -1,6 +1,6 @@
 from db import ConectorDB
 
-class AccionDao():
+class AccionDao:
     def __init__(self):
         self.conector = ConectorDB()
 
@@ -15,12 +15,22 @@ class AccionDao():
             accion.cantidad_compra_diaria, accion.precio_compra, accion.precio_venta,
             accion.cantidad_venta_diaria
         )
-        self.conector.ejecutar_consulta(consulta, parametros)
+        try:
+            self.conector.ejecutar_consulta(consulta, parametros)
+            return True
+        except Exception as e:
+            print(f"Error al crear la acción: {e}")
+            return False
 
     def eliminar(self, simbolo):
         consulta = "DELETE FROM Acciones WHERE simbolo = %s"
         parametros = (simbolo,)
-        self.conector.ejecutar_consulta(consulta, parametros)
+        try:
+            self.conector.ejecutar_consulta(consulta, parametros)
+            return True
+        except Exception as e:
+            print(f"Error al eliminar la acción: {e}")
+            return False
 
     def modificar(self, accion):
         consulta = """
@@ -33,20 +43,33 @@ class AccionDao():
             accion.maximo_diario, accion.ultimo_cierre, accion.cantidad_compra_diaria, accion.precio_compra,
             accion.precio_venta, accion.cantidad_venta_diaria, accion.simbolo
         )
-        self.conector.ejecutar_consulta(consulta, parametros)
+        try:
+            self.conector.ejecutar_consulta(consulta, parametros)
+            return True
+        except Exception as e:
+            print(f"Error al modificar la acción: {e}")
+            return False
 
     def obtener(self, simbolo):
         consulta = "SELECT * FROM Acciones WHERE simbolo = %s"
         parametros = (simbolo,)
-        return self.conector.obtener_datos(consulta, parametros)
+        try:
+            return self.conector.obtener_datos(consulta, parametros)
+        except Exception as e:
+            print(f"Error al obtener la acción: {e}")
+            return None
 
     def obtener_todos(self):
         consulta = "SELECT * FROM Acciones"
-        return self.conector.obtener_datos(consulta)
+        try:
+            return self.conector.obtener_datos(consulta)
+        except Exception as e:
+            print(f"Error al obtener todas las acciones: {e}")
+            return []
 
     def consulta_personalizada(self, consulta, parametros=None):
-        return self.conector.obtener_datos(consulta, parametros)
-    
-if __name__ == "__main__":
-    lel = AccionDao()
-    print(lel.obtener("AAPL"))
+        try:
+            return self.conector.obtener_datos(consulta, parametros)
+        except Exception as e:
+            print(f"Error en consulta personalizada: {e}")
+            return None

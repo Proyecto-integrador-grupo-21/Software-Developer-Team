@@ -2,7 +2,7 @@ import mysql.connector
 from mysql.connector import Error
 
 class ConectorDB:
-    def __init__(self, host="localhost", user="root", password="", database="ARGBrokerDB"):
+    def __init__(self, host="localhost", user="root", password="EedmpelEdmb1989", database="ARGBrokerDB"):
         self._host = host
         self._user = user
         self._password = password
@@ -25,6 +25,7 @@ class ConectorDB:
     def desconectar(self):
         if self._conexion and self._conexion.is_connected():
             self._conexion.close()
+            self._conexion = None  # Reiniciar conexión a None
 
     def ejecutar_consulta(self, consulta, parametros=None):
         conexion = self.conexion_db()
@@ -50,3 +51,5 @@ class ConectorDB:
                 return resultados
         except Error as error:
             raise Exception(f"Error al obtener los datos: {error}")
+        finally:
+            self.desconectar()  # Asegurar que la conexión se cierre después de obtener datos

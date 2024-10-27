@@ -12,6 +12,9 @@ class Portafolio:
         return self._acciones
 
     def agregar_accion(self, accion, cantidad, valor_invertido, rendimiento=0.00):
+        if cantidad <= 0 or valor_invertido < 0:
+            raise ValueError("La cantidad debe ser mayor que cero y el valor invertido no puede ser negativo.")
+        
         self._acciones.append({
             'accion': accion,
             'cantidad': cantidad,
@@ -49,3 +52,5 @@ class Portafolio:
                 f"Valor Total Invertido: {self.calcular_valor_total_invertido()}\n"
                 f"Rendimiento Total: {self.calcular_rendimiento_total()}\n\n"
                 f"{detalles}")
+
+
