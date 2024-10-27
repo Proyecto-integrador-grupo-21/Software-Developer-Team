@@ -13,15 +13,19 @@ class Accion:
             registro = self._dao.consulta_personalizada(consulta, parametros)
             print("Registro devuelto:", registro)
             if registro:
-                (self._simbolo, self._nombre_empresa, self._ultimo_precio_operado,
+                (self._id, self._simbolo, self._nombre_empresa, self._ultimo_precio_operado,
                 self._apertura, self._minimo_diario, self._maximo_diario,
                 self._ultimo_cierre, self._cantidad_compra_diaria,
                 self._precio_compra, self._precio_venta, 
-                self._cantidad_venta_diaria) = registro
+                self._cantidad_venta_diaria) = registro[0]
             else:
                 raise ValueError("No se encontró la acción con el símbolo proporcionado.")
         except Exception as e:
             raise Exception(f"Error al cargar los datos de la acción: {e}")
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def simbolo(self):

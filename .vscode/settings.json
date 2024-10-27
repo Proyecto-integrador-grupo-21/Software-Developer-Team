@@ -3,5 +3,10 @@
         "./Programacion/src",
         "./Programacion/src/dao",
         "./Programacion/config"
-    ]
+    ],
+    "python.testing.pytestArgs": [
+        "Programacion"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

@@ -1,3 +1,4 @@
+from portafolio_dao import PortafolioDao
 class Portafolio:
     def __init__(self, id_inversor):
         self._id_inversor = id_inversor

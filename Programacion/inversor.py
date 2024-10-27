@@ -63,7 +63,7 @@ class Inversor:
         try:
             resultado = self._dao.consulta_personalizada(consulta, parametros)
             if resultado:
-                return resultado[0]
+                return resultado[0][0]
             else:
                 raise ValueError("Inversor no encontrado.")
         except Exception as e:
@@ -71,7 +71,7 @@ class Inversor:
 
     def registrar(self):
         if self.verificar_inversor():
-            return (f"El inversor con CUIL {self._cuil} ya tiene una cuenta registrada.")
+            return f"El inversor con CUIL {self._cuil} ya tiene una cuenta registrada."
         else:
             try:
                 self._dao.crear(self)
@@ -116,8 +116,8 @@ class Inversor:
                 print("CUIL o contraseña incorrectos.")
             return False
         
-    def operacion(self, accion, cantidad: int, tipo: str):
-        accion = Accion(accion)
+    def operacion(self, simbolo_accion, cantidad: int, tipo: str):
+        accion = Accion(simbolo_accion)
         if cantidad <= 0:
             raise ValueError("La cantidad debe ser mayor que cero.")
         
@@ -129,21 +129,19 @@ class Inversor:
                 raise Exception("Saldo insuficiente para realizar la compra.")
             self._saldo_cuenta -= total_operacion
             
-            transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id_accion, tipo_transaccion="Compra", cantidad=cantidad, precio=accion.precio_compra)
+            transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id, tipo_transaccion="Compra", cantidad=cantidad, precio=accion.precio_compra)
             transaccion.crear_transaccion()
-            print(f"Compra exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion}.")
+            print(f"Compra exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion:.2f}.")
 
         elif tipo == "Venta":
             total_operacion = cantidad * accion.precio_venta
-
-            transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id_accion, tipo_transaccion="Venta", cantidad=cantidad, precio=accion.precio_venta)
+            
+            transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id, tipo_transaccion="Venta", cantidad=cantidad, precio=accion.precio_venta)
             transaccion.crear_transaccion()
             self._saldo_cuenta += total_operacion
-            print(f"Venta exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion}.")
+            print(f"Venta exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion:.2f}.")
         else:
             raise ValueError("Tipo de operación no válido. Debe ser 'Compra' o 'Venta'.")
-
-
 
     def mostrar_datos_cuenta(self):
         return {
@@ -155,5 +153,5 @@ class Inversor:
         }
 
 if __name__ == "__main__":
-    test = Inversor("Miguel", "Scaccia", "20-12335178-9", "miguel1@example.com", "hola123", "Direccion", "31211313", "conservador")
+    test = Inversor("Miguel", "Scaccia", "20-12335178-9", "miguel1@example.com", "hola123", "Direccion", "31211313", "conservador", 100000)
     print(test.operacion("AAPL", 3, "Compra"))

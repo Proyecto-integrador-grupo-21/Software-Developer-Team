@@ -6,11 +6,13 @@ class TransaccionDao(InterfazDao):
         self.conector = ConectorDB()
 
     def crear(self, transaccion):
-        consulta = """
-        INSERT INTO Transacciones (id_inversor, id_accion, tipo_transaccion, cantidad, precio, comision)
-        VALUES (%s, %s, %s, %s, %s, %s)
-        """
-        parametros = (transaccion.id_inversor, transaccion.id_accion, transaccion.tipo_transaccion, transaccion.cantidad, transaccion.precio, transaccion.comision)
+        consulta = """INSERT INTO Transacciones 
+                    (id_inversor, id_accion, tipo_transaccion, cantidad, precio, comision) 
+                    VALUES (%s, %s, %s, %s, %s, %s)"""
+        parametros = (transaccion.id_inversor, transaccion.id_accion, 
+                    transaccion.tipo_transaccion, transaccion.cantidad, 
+                    transaccion.precio, transaccion.comision)
+
         self.conector.ejecutar_consulta(consulta, parametros)
 
     def eliminar(self, id):
