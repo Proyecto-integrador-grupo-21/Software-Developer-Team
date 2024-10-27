@@ -18,7 +18,6 @@ class Inversor:
     def nombre(self):
         return self._nombre
 
-
     @property
     def apellido(self):
         return self._apellido
