@@ -101,6 +101,31 @@ class Inversor:
             else:
                 print("CUIL o contraseña incorrectos.")
             return False
+        
+    def comprar_accion(self, accion: Accion, cantidad: int):
+        if cantidad <= 0:
+            raise ValueError("La cantidad a comprar debe ser mayor que cero.")
+        
+        total_compra = cantidad * accion.precio_compra
+        if total_compra > self.saldo_cuenta:
+            raise Exception("Saldo insuficiente para realizar la compra.")
+        
+        # Aquí puedes agregar la lógica para registrar la compra en la base de datos
+        self._saldo_cuenta -= total_compra
+        print(f"Compra exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_compra}.")
+
+    def vender_accion(self, accion: Accion, cantidad: int):
+        if cantidad <= 0:
+            raise ValueError("La cantidad a vender debe ser mayor que cero.")
+        
+        # Aquí deberías verificar si el inversor tiene suficientes acciones para vender.
+        # Suponiendo que hay una lógica para verificar esto.
+        
+        total_venta = cantidad * accion.precio_venta
+        # Aquí puedes agregar la lógica para registrar la venta en la base de datos
+        self._saldo_cuenta += total_venta
+        print(f"Venta exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_venta}.")
+
 
     def mostrar_datos_cuenta(self):
         return {
