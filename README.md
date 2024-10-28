@@ -54,4 +54,3 @@ La primera etapa del proyecto es una versión demo que simula la compra y venta 
 ## Autores
 - Rojas Rodrigo Walter
 - Miguel Ivan Scaccia
-- Agustin Rizzo
