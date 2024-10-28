@@ -27,6 +27,10 @@ class Accion:
         return self._id
 
     @property
+    def id(self):
+        return self._id
+
+    @property
     def simbolo(self):
         return self._simbolo
 
@@ -69,6 +73,23 @@ class Accion:
     @property
     def cantidad_venta_diaria(self):
         return self._cantidad_venta_diaria
+    
+    def ver_todo(self):
+        acciones = self._dao.obtener_todos()
+        if not acciones:
+            print("No se encontraron acciones.")
+            return
+
+        print(f"{'ID':<5} {'Símbolo':<10} {'Nombre Empresa':<25} {'Último Precio':<15} {'Apertura':<10} {'Mínimo':<10} {'Máximo':<10} {'Último Cierre':<15} {'Cantidad Compra':<20} {'Precio Compra':<15} {'Precio Venta':<15} {'Cantidad Venta':<20}")
+        print("=" * 150)
+        for registro in acciones:
+            (id_accion, simbolo, nombre_empresa, ultimo_precio_operado,
+            apertura, minimo_diario, maximo_diario, ultimo_cierre,
+            cantidad_compra_diaria, precio_compra, precio_venta, 
+            cantidad_venta_diaria) = registro
+
+            print(f"{id_accion:<5} {simbolo:<10} {nombre_empresa:<25} {ultimo_precio_operado:<15} {apertura:<10} {minimo_diario:<10} {maximo_diario:<10} {ultimo_cierre:<15} {cantidad_compra_diaria:<20} {precio_compra:<15} {precio_venta:<15} {cantidad_venta_diaria:<20}")
+            
     
     def ver_todo(self):
         acciones = self._dao.obtener_todos()

@@ -2,6 +2,10 @@ from transaccion import Transaccion
 from accion import Accion
 from inversor_dao import InversorDao
 
+from transaccion import Transaccion
+from accion import Accion
+from inversor_dao import InversorDao
+
 class Portafolio:
     def __init__(self, cuil):
         self.inversor_dao = InversorDao()
