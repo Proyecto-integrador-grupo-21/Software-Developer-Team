@@ -12,8 +12,7 @@ class Transaccion:
         self._tipo_transaccion = tipo_transaccion
         self._cantidad = cantidad
         self._precio = precio
-        self._comision = comision  # Ahora el constructor acepta comision
-        self._comision = comision  # Ahora el constructor acepta comision
+        self._comision = comision 
         self._fecha_transaccion = fecha_transaccion
         self._dao = TransaccionDao()
 
@@ -160,7 +159,6 @@ class Transaccion:
         return self._dao.obtener_todos()
 
     def __str__(self):
-        return f"Transacción(id: {self.id_transaccion}, tipo: {self.tipo_transaccion}, cantidad: {self.cantidad}, precio: {self.precio}, comisión: {self.comision})"
         return f"Transacción(id: {self.id_transaccion}, tipo: {self.tipo_transaccion}, cantidad: {self.cantidad}, precio: {self.precio}, comisión: {self.comision})"
 
 if __name__ == "__main__":
