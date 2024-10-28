@@ -61,8 +61,28 @@ CREATE TABLE IF NOT EXISTS Portafolio (
   FOREIGN KEY (id_accion) REFERENCES Acciones(id_accion)
 );
 
-INSERT INTO inversor (nombre, apellido, cuil, email, contrasena, direccion, telefono, perfil_inversor, cuenta_bloqueada, saldo_cuenta) VALUES
-('Miguel', 'Scaccia', '20-12345678-9', 'miguel@example.com', 'password123', 'Calle Falsa 123', '123456789', 'intermedio', FALSE, 1000.00),
-('Ana', 'Gómez', '20-98765432-1', 'ana@example.com', 'password456', 'Avenida Siempre Viva 456', '987654321', 'conservador', FALSE, 5000.00);
+INSERT INTO inversor (nombre, apellido, cuil, email, contrasena, direccion, telefono, perfil_inversor, saldo_cuenta)
+VALUES 
+('Juan', 'Pérez', '20-12345678-9', 'juan.perez@example.com', 'password123', 'Calle Falsa 123', '1234567890', 'conservador', 50000.00),
+('María', 'Gómez', '20-87654321-0', 'maria.gomez@example.com', 'mypassword456', 'Avenida Siempre Viva 456', '0987654321', 'intermedio', 100000.00),
+('Carlos', 'López', '20-13579246-8', 'carlos.lopez@example.com', 'securepass789', 'Boulevard de los Sueños 789', '1122334455', 'agresivo', 250000.00);
 
-SELECT * FROM inversor
+
+INSERT INTO Acciones (simbolo, nombre_empresa, ultimo_precio_operado, apertura, minimo_diario, maximo_diario, ultimo_cierre, cantidad_compra_diaria, precio_compra, precio_venta, cantidad_venta_diaria)
+VALUES 
+('AAPL', 'Apple Inc.', 150.00, 148.50, 147.00, 151.00, 149.00, 10000, 148.00, 150.50, 8000),
+('MSFT', 'Microsoft Corp.', 300.00, 295.00, 290.00, 302.00, 298.00, 12000, 294.00, 299.50, 10000),
+('TSLA', 'Tesla Inc.', 700.00, 680.00, 675.00, 710.00, 690.00, 9000, 678.00, 702.00, 7500);
+
+
+INSERT INTO Transacciones (id_inversor, id_accion, tipo_transaccion, cantidad, precio, comision)
+VALUES 
+(1, 1, 'compra', 10, 150.00, 1.50),
+(1, 2, 'venta', 5, 300.00, 1.50),
+(2, 3, 'compra', 2, 700.00, 1.50);
+
+INSERT INTO Portafolio (id_inversor, id_accion, cantidad_acciones, valor_invertido, rendimiento)
+VALUES 
+(1, 1, 10, 1500.00, 200.00),
+(2, 2, 5, 1500.00, 300.00),
+(3, 3, 2, 1400.00, 500.00);
