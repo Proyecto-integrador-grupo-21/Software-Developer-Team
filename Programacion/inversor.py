@@ -131,7 +131,7 @@ class Inversor:
             
             transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id, tipo_transaccion="Compra", cantidad=cantidad, precio=accion.precio_compra)
             transaccion.crear_transaccion()
-            print(f"Compra exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion:.2f}.")
+            print(f"Compra exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion:.2f}. Le queda {self.saldo_cuenta}")
 
         elif tipo == "Venta":
             total_operacion = cantidad * accion.precio_venta
@@ -139,9 +139,27 @@ class Inversor:
             transaccion = Transaccion(id_inversor=id_inversor, id_accion=accion.id, tipo_transaccion="Venta", cantidad=cantidad, precio=accion.precio_venta)
             transaccion.crear_transaccion()
             self._saldo_cuenta += total_operacion
-            print(f"Venta exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion:.2f}.")
+            print(f"Venta exitosa: {cantidad} acciones de {accion.simbolo} por un total de {total_operacion:.2f}. Le queda {self.saldo_cuenta}")
         else:
             raise ValueError("Tipo de operación no válido. Debe ser 'Compra' o 'Venta'.")
+        
+    def registro_transaccion(self):
+        test = Transaccion()
+        id_inversor = self.buscar_id()
+        transacciones = test.obtener_por_id_inversor(id_inversor)
+        
+        resultado = []
+        for item in transacciones:
+            transaccion = item['transaccion']
+            resultado.append({
+                'id': transaccion.id_transaccion,
+                'tipo': transaccion.tipo_transaccion,
+                'cantidad': transaccion.cantidad,
+                'precio': transaccion.precio,
+                'comision': transaccion.comision,
+                'simbolo_accion': item['simbolo_accion'] 
+            })
+        return resultado
 
     def mostrar_datos_cuenta(self):
         return {
@@ -154,4 +172,4 @@ class Inversor:
 
 if __name__ == "__main__":
     test = Inversor("Miguel", "Scaccia", "20-12335178-9", "miguel1@example.com", "hola123", "Direccion", "31211313", "conservador", 100000)
-    print(test.operacion("AAPL", 3, "Compra"))
+    print(test.registro_transaccion())

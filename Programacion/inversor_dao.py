@@ -30,7 +30,14 @@ class InversorDao():
         consulta = "SELECT * FROM inversor WHERE id = %s"
         parametros = (id,)
         return self.conector.obtener_datos(consulta, parametros)
+    
+    def obtener_id_por_cuil(self, cuil):
+        consulta = "SELECT id FROM inversor WHERE cuil = %s"
+        parametros = (cuil,)
+        resultado = self.conector.obtener_datos(consulta, parametros)
+        return resultado[0][0] if resultado else None
 
+        
     def obtener_todos(self):
             consulta = "SELECT * FROM inversor"
             return self.conector.obtener_datos(consulta)
@@ -41,4 +48,4 @@ class InversorDao():
 if __name__ == "__main__":
     lel = InversorDao()
 
-    print(lel.obtener_todos())
+    print(lel.obtener_id_por_cuil("20-12335178-9"))

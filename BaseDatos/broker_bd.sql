@@ -61,15 +61,6 @@ CREATE TABLE IF NOT EXISTS Portafolio (
   FOREIGN KEY (id_accion) REFERENCES Acciones(id_accion)
 );
 
--- Creación de la tabla Comisiones
-CREATE TABLE IF NOT EXISTS Comisiones (
-  id_comision BIGINT PRIMARY KEY AUTO_INCREMENT,
-  id_transaccion BIGINT,
-  porcentaje DECIMAL(5, 2) DEFAULT 1.50,
-  monto_comision DECIMAL(15, 2),
-  FOREIGN KEY (id_transaccion) REFERENCES Transacciones(id_transaccion)
-);
-
 INSERT INTO inversor (nombre, apellido, cuil, email, contrasena, direccion, telefono, perfil_inversor, cuenta_bloqueada, saldo_cuenta) VALUES
 ('Miguel', 'Scaccia', '20-12345678-9', 'miguel@example.com', 'password123', 'Calle Falsa 123', '123456789', 'intermedio', FALSE, 1000.00),
 ('Ana', 'Gómez', '20-98765432-1', 'ana@example.com', 'password456', 'Avenida Siempre Viva 456', '987654321', 'conservador', FALSE, 5000.00);

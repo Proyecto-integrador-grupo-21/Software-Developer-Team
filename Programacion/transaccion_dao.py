@@ -30,7 +30,7 @@ class TransaccionDao(InterfazDao):
         self.conector.ejecutar_consulta(consulta, parametros)
 
     def obtener(self, id):
-        consulta = "SELECT * FROM Transacciones WHERE id_transaccion = %s"
+        consulta = "SELECT * FROM Transacciones WHERE id_inversor = %s"
         parametros = (id,)
         return self.conector.obtener_datos(consulta, parametros)
     
