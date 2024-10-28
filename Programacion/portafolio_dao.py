@@ -1,4 +1,4 @@
-from config.db import ConectorDB
+from db import ConectorDB
 from interfaz_dao import InterfazDao
 
 class PortafolioDao(InterfazDao):

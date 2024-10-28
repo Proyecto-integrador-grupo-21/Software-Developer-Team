@@ -39,6 +39,11 @@ class AccionDao():
         consulta = "SELECT * FROM Acciones WHERE simbolo = %s"
         parametros = (simbolo,)
         return self.conector.obtener_datos(consulta, parametros)
+    
+    def obtener_id(self, id):
+        consulta = "SELECT simbolo FROM Acciones WHERE id_accion = %s"
+        parametros = (id,)
+        return self.conector.obtener_datos(consulta, parametros)
 
     def obtener_todos(self):
         consulta = "SELECT * FROM Acciones"

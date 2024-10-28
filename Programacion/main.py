@@ -1,4 +1,6 @@
 from inversor import Inversor
+from accion import Accion
+from portafolio import Portafolio
 import re
 
 def mostrar_bienvenida():
@@ -20,12 +22,12 @@ def iniciar_sesion():
         return
     
     contrasena = input("Ingrese su contraseña: ")
-    inversor = Inversor(nombre="", apellido="", cuil=cuil, email="", contrasena=contrasena, direccion="", telefono="", perfil_inversor="")
+    inversor = Inversor(nombre="", apellido="", cuil=cuil, email="", contrasena=contrasena, direccion="", telefono="", perfil_inversor="", saldo_cuenta=1000000)
     
     try:
         if inversor.iniciar_sesion(cuil, contrasena):
             print("\nInicio de sesión exitoso. Bienvenido.")
-            mostrar_menu_principal()
+            mostrar_menu_principal(inversor)
         else:
             print("CUIL o contraseña incorrectos. Intente nuevamente.")
     except Exception as e:
@@ -63,46 +65,101 @@ def registrar_usuario():
     except Exception as e:
         print(f"Error al registrar usuario: {e}")
 
-def mostrar_menu_principal():
+def mostrar_menu_principal(inversor):
     while True:
         print("\nMenú Principal")
         print("1. Gestión de Acciones")
         print("2. Registro de Transacciones")
         print("3. Portafolio")
-        print("4. Cerrar Sesión")
+        print("4. Cerrar Sesion")
 
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            menu_accion()
+            menu_accion(inversor)
         elif opcion == "2":
-            menu_transaccion()
+            registrar_transacciones(inversor)
         elif opcion == "3":
-            menu_portafolio()
+            menu_portafolio(inversor)
         elif opcion == "4":
             print("Sesión cerrada. Regresando al menú de bienvenida.")
             break
         else:
             print("Opción no válida. Intente nuevamente.")
 
-def menu_accion():
-    print("\nGestión de Acciones")
-    print("1. Ver todas las acciónes")
-    print("2. Comprar acción")
-    print("3. Vender acción")
-    print("4. Volver al menú principal")
+def menu_accion(inversor):
+    while True:
+        print("\nGestión de Acciones")
+        print("1. Ver todas las acciones")
+        print("2. Comprar acción")
+        print("3. Vender acción")
+        print("4. Volver al menú principal")
+        
+        opcion = input("Seleccione una opción: ")
 
-def menu_transaccion():
-    print("\Registro de Transacciones")
-    print("1. Consultar transacciónes")
-    print("2. Volver al menú principal")
+        if opcion == "1":
+            acciones = Accion("AAPL")
+            print(acciones.ver_todo())
+        elif opcion == "2":
+            comprar_accion(inversor)
+        elif opcion == "3":
+            vender_accion(inversor)
+        elif opcion == "4":
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
 
-def menu_portafolio():
+def comprar_accion(inversor):
+    simbolo_accion = input("Ingrese el símbolo de la acción que desea comprar: ")
+    cantidad = int(input("Ingrese la cantidad de acciones a comprar: "))
+    
+    try:
+        inversor.operacion(simbolo_accion, cantidad, "Compra")
+    except Exception as e:
+        print(f"Error en la compra: {e}")
+
+def vender_accion(inversor):
+    simbolo_accion = input("Ingrese el símbolo de la acción que desea vender: ")
+    cantidad = int(input("Ingrese la cantidad de acciones a vender: "))
+    
+    try:
+        inversor.operacion(simbolo_accion, cantidad, "Venta")
+    except Exception as e:
+        print(f"Error en la venta: {e}")
+
+def registrar_transacciones(inversor):
+    print("\nRegistro de Transacciones")
+    consultar_transacciones(inversor) 
+
+def menu_portafolio(inversor):
     print("\nPortafolio")
-    print("1. Consultar portafolio")
-    print("2. Volver al menú principal")
+    portafolio = Portafolio(inversor.cuil)
+    portafolio.mostrar_acciones()
 
-# Inicio de la aplicación
+
+def consultar_transacciones(inversor):
+    print("\nConsultar Transacciones")
+    try:
+        transacciones_con_simbolos = inversor.registro_transaccion()
+        
+        if transacciones_con_simbolos:
+            print("\n{:<10} {:<10} {:<15} {:<10} {:<15} {:<15}".format(
+                "ID", "Tipo", "Símbolo", "Cantidad", "Precio", "Comisión"))
+            print("-" * 80)
+
+            for item in transacciones_con_simbolos:
+                print("{:<10} {:<10} {:<15} {:<10} {:<15} {:<15}".format(
+                    item['id'], 
+                    item['tipo'], 
+                    item['simbolo_accion'],
+                    item['cantidad'], 
+                    item['precio'], 
+                    item.get('comision', 'No disponible')))
+        else:
+            print("No hay transacciones registradas.")
+    except Exception as e:
+        print(f"Error al consultar transacciones: {e}")
+
 def ejecutar():
     while True:
         mostrar_bienvenida()
